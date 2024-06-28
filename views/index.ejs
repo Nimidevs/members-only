@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClubHouse</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #333;
+      color: #fff;
+    }
+
+    .navbar .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .navbar .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 15px;
+      background-color: #555;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar .nav-links a:hover {
+      background-color: #777;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 50px;
+      background-color: #e2e8f0;
+    }
+
+    .hero h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .hero a {
+      text-decoration: none;
+      color: #fff;
+      background-color: #007bff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .hero a:hover {
+      background-color: #0056b3;
+    }
+
+    .messages {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .message {
+      background-color: #fff;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .message .timestamp {
+      font-size: 0.85em;
+      color: #666;
+    }
+
+    .message .author {
+      font-size: 0.9em;
+      color: #007bff;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="logo"><a href="/">ClubHouse</a></div>
+    <div class="nav-links">
+      <% if (!user) { %>
+        <a href="/clubhouse/login">Log In</a>
+        <% } else if (!user.member) { %>
+          <a href="/clubhouse/become-a-member">Become a Member</a>
+          <% } %>
+            <% if (user && user.member && !user.admin) { %>
+              <a href="/clubhouse/become-an-admin">Become an Admin</a>
+              <% } %>
+                <% if (user) { %>
+                  <a href="/clubhouse/logout">Log Out</a>
+                  <% } %>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Welcome to ClubHouse</h1>
+    <% if (user) { %>
+      <a href="/clubhouse/create-message">Create a New Message</a>
+      <% } else { %>
+        <a href="/clubhouse/login">Log In to Create a Message</a>
+        <% } %>
+  </div>
+
+  <div class="messages">
+    <% messages.forEach(message=> { %>
+      <div class="message">
+        <p>
+          <%= message.msg_text %>
+        </p>
+        <div class="timestamp">
+          <%= message.timestamp.toLocaleString() %>
+        </div>
+        <% if (user.member) { %>
+          <div class="author">By: <%= message.author.first_name %>
+              <%= message.author.last_name %>
+          </div>
+          <% } %>
+            <% if (user.admin) { %>
+              <form action="/clubhouse/delete-message/<%= message._id %>" method="post">
+                <button type="submit">Delete</button>
+              </form>
+              <% if (user.first_name === message.author.first_name) { %>
+                <a href="/clubhouse/update-message/<%= message._id %>">Update Message</a>
+                <% } %>
+                  <% } %>
+      </div>
+      <% }) %>
+  </div>
+</body>
+
+</html>
