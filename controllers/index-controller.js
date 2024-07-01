@@ -2,14 +2,18 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
 const Messages = require("../models/message");
+const passport = require("passport");
+
 
 exports.index_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    const messages = await Messages.find().populate("author").exec();
-    return res.render("index", { user: req.user, messages: messages });
-  } else {
-    return res.redirect("/clubhouse/login");
-  }
+  const messages = await Messages.find().populate("author").exec();
+  return res.render("index", { user: req.user, messages: messages });
+  // if (req.user) {
+  //   const messages = await Messages.find().populate("author").exec();
+  //   return res.render("index", { user: req.user, messages: messages });
+  // } else {
+  //   return res.redirect("/clubhouse/login");
+  // }
 });
 
 //Become A Member
@@ -75,7 +79,7 @@ exports.index_become_an_admin_post = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        console.log("errors present")
+      console.log("errors present");
       res.render("become-an-admin-form", {
         user: req.user,
         errors: errors.array(),

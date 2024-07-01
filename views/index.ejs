@@ -132,12 +132,12 @@
         <div class="timestamp">
           <%= message.timestamp.toLocaleString() %>
         </div>
-        <% if (user.member) { %>
+        <% if (user && user.member) { %>
           <div class="author">By: <%= message.author.first_name %>
               <%= message.author.last_name %>
           </div>
           <% } %>
-            <% if (user.admin) { %>
+            <% if (user && user.admin) { %>
               <form action="/clubhouse/delete-message/<%= message._id %>" method="post">
                 <button type="submit">Delete</button>
               </form>
